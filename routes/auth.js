@@ -68,9 +68,14 @@ router.post('/login', async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, email: user.email, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        return res.status(200).send({ token });
+        // Send back user info without password
+        const userInfo = { ...user.toObject() };
+        delete userInfo.password;
+
+        return res.status(200).send({ token, ...userInfo });
+
     } catch (error) {
         console.error(error);
         return res.status(500).send({ message: 'Error logging in' });
