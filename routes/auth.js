@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -9,7 +9,7 @@ const User = require('../models/user');
 
 router.post('/signup', async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, isAdmin } = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -27,6 +27,7 @@ router.post('/signup', async (req, res) => {
         const newUser = new User({
             name,
             email,
+            isAdmin,
             password: hashedPassword
         });
 

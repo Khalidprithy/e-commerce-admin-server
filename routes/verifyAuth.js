@@ -1,13 +1,15 @@
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers.token;
     if (!authHeader) {
         return res.status(401).send({ message: 'No token provided' });
     }
     const token = authHeader.split(' ')[1];
+    console.log(token)
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
+            console.log(err)
             return res.status(401).send({ message: 'Invalid token' });
         }
         req.user = decoded;
@@ -28,4 +30,4 @@ const verifyTokenAndAdmin = (req, res, next) => {
     });
 };
 
-module.exports = verifyTokenAndAdmin;
+module.exports = { verifyToken, verifyAdmin, verifyTokenAndAdmin };
