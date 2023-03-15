@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { query } = require('express');
 const Product = require('../models/product');
 const { verifyTokenAndAdmin, verifyToken } = require('./verifyAuth');
 
@@ -71,8 +72,30 @@ router.get("/:productId", async (req, res) => {
 // Get all products
 
 router.get("/", async (req, res) => {
+    const queryNew = req.query.new;
+    const queryCategory = req.query.category;
+    const querySubCategory = req.query.subCategory;
     try {
-        const products = await Product.find();
+        let products;
+
+        if (queryNew) {
+            products = await Product.find().sort({ createdAt: -1 }).limit(5);
+        } else if (queryCategory) {
+            products = await Product.find({
+                category: {
+                    $in: [queryCategory]
+                },
+            })
+        } else if (querySubCategory) {
+            products = await Product.find({
+                category: {
+                    $in: [querySubCategory]
+                },
+            })
+        } else {
+            products = await Product.find();
+        }
+
         res.status(200).json(products);
     } catch (error) {
         console.log(error);
