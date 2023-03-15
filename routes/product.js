@@ -38,8 +38,7 @@ router.put("/:productId", verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
-// Delete product
-
+// Delete a product
 
 router.delete("/:productId", verifyTokenAndAdmin, async (req, res) => {
     try {
@@ -50,6 +49,24 @@ router.delete("/:productId", verifyTokenAndAdmin, async (req, res) => {
         res.status(500).json(error);
     }
 });
+
+// Find a product
+
+router.get("/:productId", async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.productId);
+        if (!product) {
+            res.status(404).json({ message: "Product not found" })
+        }
+        else {
+            res.status(200).json(product);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+});
+
 
 
 // Update user profile
