@@ -68,6 +68,19 @@ router.get("/:productId", async (req, res) => {
 });
 
 
+// Get all products
+
+router.get("/", async (req, res) => {
+    try {
+        const products = await Product.find();
+        res.status(200).json(products);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+});
+
+
 
 // Update user profile
 router.put("/:id", verifyToken, async (req, res) => {
