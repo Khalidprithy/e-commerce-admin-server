@@ -38,6 +38,18 @@ router.put("/:productId", verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
+// Delete product
+
+
+router.delete("/:productId", verifyTokenAndAdmin, async (req, res) => {
+    try {
+        const deletedProduct = await Product.findByIdAndDelete(req.params.productId);
+        res.status(200).json({ message: "Product deleted successfully" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+});
 
 
 // Update user profile
