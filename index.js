@@ -7,6 +7,7 @@ const port = process.env.PORT || 5000
 
 const userRoute = require("./routes/user")
 const authRoute = require("./routes/auth")
+const productRoute = require("./routes/product")
 
 mongoose
     .connect(`mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.fdlyklx.mongodb.net/e-commerce?retryWrites=true&w=majority`)
@@ -20,6 +21,7 @@ app.use(express.json());
 
 app.use("/api/user", userRoute)
 app.use("/api/auth", authRoute)
+app.use("/api/products", productRoute)
 
 
 app.get('/', (req, res) => {
