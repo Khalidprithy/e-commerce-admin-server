@@ -9,12 +9,12 @@ const User = require('../models/user');
 
 router.post('/signup', async (req, res) => {
     try {
-        const { name, email, password, isAdmin } = req.body;
+        const { phone, password, isAdmin } = req.body;
 
         // Check if user already exists
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ phone });
         if (existingUser) {
-            return res.status(409).send({ message: 'Email already in use' });
+            return res.status(409).send({ message: 'Phone already in use' });
         }
 
         // Generate random salt value
@@ -25,8 +25,8 @@ router.post('/signup', async (req, res) => {
 
         // Create new user document
         const newUser = new User({
-            name,
-            email,
+
+            phone,
             isAdmin,
             password: hashedPassword
         });
@@ -34,9 +34,9 @@ router.post('/signup', async (req, res) => {
         // Save new user to database
         await newUser.save();
 
-        // Create JWT token with email and admin status
+        // Create JWT token with phone and admin status
         const token = jwt.sign(
-            { email: newUser.email, isAdmin: newUser.isAdmin },
+            { phone: newUser.phone, isAdmin: newUser.isAdmin },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
@@ -54,22 +54,22 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { phone, password } = req.body;
 
         // Check if user exists
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ phone });
         if (!user) {
-            return res.status(401).send({ message: 'Invalid email or password' });
+            return res.status(401).send({ message: 'Invalid phone or password' });
         }
 
         // Check if password is correct
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(401).send({ message: 'Invalid email or password' });
+            return res.status(401).send({ message: 'Invalid phone or password' });
         }
 
         // Generate JWT token
-        const token = jwt.sign({ userId: user._id, email: user.email, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, phone: user.phone, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Send back user info without password
         const userInfo = { ...user.toObject() };

@@ -10,7 +10,7 @@ const authRoute = require("./routes/auth")
 const productRoute = require("./routes/product")
 
 mongoose
-    .connect(`mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.fdlyklx.mongodb.net/e-commerce?retryWrites=true&w=majority`)
+    .connect(`mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.ntdksjz.mongodb.net/e-commerce-admin?retryWrites=true&w=majority`)
     .then(() => console.log('Kindo Database connected'))
     .catch((err) => {
         console.log(err, 'Failed to connect database')
