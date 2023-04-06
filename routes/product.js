@@ -6,20 +6,25 @@ const { verifyTokenAndAdmin, verifyToken } = require('./verifyAuth');
 const router = require('express').Router();
 
 
-// Create product
+// Create a product
 
 router.post("/", verifyTokenAndAdmin, async (req, res) => {
-
-    const newProduct = new Product(req.body);
-    console.log(newProduct)
     try {
+        // Check if product with the same title already exists
+        const existingProduct = await Product.findOne({ title: req.body.title });
+        if (existingProduct) {
+            return res.status(400).json({ message: "A Product with same title already exists" });
+        }
+
+        const newProduct = new Product(req.body);
         const savedProduct = await newProduct.save();
         res.status(200).json(savedProduct);
     } catch (error) {
-        console.log(error)
-        res.status(500).json(error)
+        console.log(error);
+        res.status(500).json(error);
     }
-})
+});
+
 
 // Update a product
 

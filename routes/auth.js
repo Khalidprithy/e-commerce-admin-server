@@ -42,10 +42,10 @@ router.post('/signup', async (req, res) => {
         );
 
         // Return token in response
-        return res.status(201).send({ message: 'User created successfully', token });
+        return res.status(201).send({ message: 'Registration successful', token });
     } catch (error) {
         console.error(error);
-        return res.status(500).send({ message: 'Error creating user' });
+        return res.status(500).send({ message: 'Registration failed, Try again' });
     }
 });
 
