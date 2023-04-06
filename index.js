@@ -23,7 +23,6 @@ app.use("/api/user", userRoute)
 app.use("/api/auth", authRoute)
 app.use("/api/products", productRoute)
 
-
 app.get('/', (req, res) => {
     res.send('Backend server Kinbo')
 })

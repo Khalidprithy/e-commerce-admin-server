@@ -5,7 +5,9 @@ const UserSchema = new Schema({
     phone: {
         type: Number,
         required: true,
-        unique: true
+        unique: true,
+        index: true,
+        sparse: true
     },
     password: {
         type: String,
