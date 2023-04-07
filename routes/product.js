@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const { query } = require('express');
-const Product = require('../models/product');
+const Product = require('../models/Product');
 const { verifyTokenAndAdmin, verifyToken } = require('./verifyAuth');
 
 const router = require('express').Router();
