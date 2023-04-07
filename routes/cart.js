@@ -1,18 +1,70 @@
-const Cart = require('../models/Cart');
+const Cart = require("../models/Cart");
+const {
+    verifyToken,
+    verifyAdmin,
+    verifyTokenAndAdmin,
+} = require("./verifyAuth");
 
-const router = require('express').Router();
+const router = require("express").Router();
 
+//CREATE
 
-router.post('/cart', async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
+    const newCart = new Cart(req.body);
+
     try {
-        const { userId } = req.body;
-        const cart = new Cart({ user: userId });
-        const savedCart = await cart.save();
-        res.status(201).send(savedCart);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'Error creating cart' });
+        const savedCart = await newCart.save();
+        res.status(200).json(savedCart);
+    } catch (err) {
+        res.status(500).json(err);
     }
 });
 
-module.exports = router
+//UPDATE
+router.put("/:id", verifyAdmin, async (req, res) => {
+    try {
+        const updatedCart = await Cart.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: req.body,
+            },
+            { new: true }
+        );
+        res.status(200).json(updatedCart);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+//DELETE
+router.delete("/:id", verifyAdmin, async (req, res) => {
+    try {
+        await Cart.findByIdAndDelete(req.params.id);
+        res.status(200).json("Cart has been deleted...");
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+//GET USER CART
+router.get("/find/:userId", verifyAdmin, async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ userId: req.params.userId });
+        res.status(200).json(cart);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+// //GET ALL
+
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
+    try {
+        const carts = await Cart.find();
+        res.status(200).json(carts);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+module.exports = router;

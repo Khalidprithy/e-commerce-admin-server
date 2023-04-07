@@ -82,6 +82,40 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
+
+router.get('/token', async (req, res) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).send({ message: 'Authorization header is missing' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const decoded = jwt.verify(token, secret);
+        const userId = decoded.userId;
+
+        // Retrieve user from database
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        // Send back user info without password
+        const userInfo = { ...user.toObject() };
+        delete userInfo.password;
+
+        return res.status(200).send(userInfo);
+    } catch (error) {
+        console.error(error);
+        return res.status(401).send({ message: 'Invalid or expired token' });
+    }
+});
+
+
+
 module.exports = router;
 
 
