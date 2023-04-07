@@ -2,7 +2,7 @@ const express = require('express');
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('../models/User');
 
 
 // Sign Up
@@ -55,7 +55,8 @@ router.post('/login', async (req, res) => {
         const { phone, password } = req.body;
 
         // Check if user exists
-        const user = await User.findOne({ phone });
+        const user = await User.findOne({ phone: phone });
+        console.log(user)
         if (!user) {
             return res.status(401).send({ message: 'Invalid phone or password' });
         }
@@ -63,7 +64,7 @@ router.post('/login', async (req, res) => {
         // Check if password is correct
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(401).send({ message: 'Invalid phone or password' });
+            return res.status(401).send({ message: 'Wrong password' });
         }
 
         // Generate JWT token
