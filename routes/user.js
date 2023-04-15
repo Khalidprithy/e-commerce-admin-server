@@ -4,7 +4,6 @@ const { verifyTokenAndAdmin, verifyToken } = require('./verifyAuth');
 
 const router = require('express').Router();
 
-
 // Update user profile
 router.put("/:id", verifyToken, async (req, res) => {
     if (req.body.password) {
@@ -54,7 +53,6 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 
 
 // Get user
-
 router.get("/find/:id", verifyToken, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
@@ -70,7 +68,6 @@ router.get("/find/:id", verifyToken, async (req, res) => {
 
 
 // Find all users
-
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
 
     const query = req.query.new;
@@ -85,7 +82,6 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
 
 
 // Get user stats
-
 router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
     const date = new Date();
     const lastYear = new Date(date.getFullYear(date.getFullYear() - 1));
